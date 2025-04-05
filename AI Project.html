@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hobby Recommendation Chatbot</title>
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            text-align: center;
+            background: url('https://images.app.goo.gl/Kv1beVWUYZoVgoYd6') no-repeat center center fixed;
+            background-size: cover;
+            margin: 0;
+            padding: 0;
+        }
+        h1 {
+            color: white;
+            padding: 20px;
+            background: rgba(0, 0, 0, 0.6);
+            display: inline-block;
+            border-radius: 10px;
+        }
+        #chatbox {
+            width: 50%;
+            margin: auto;
+            background: rgba(255, 255, 255, 0.9);
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            max-height: 400px;
+            overflow-y: auto;
+        }
+        .user, .bot {
+            margin: 10px 0;
+            padding: 12px;
+            border-radius: 10px;
+            max-width: 70%;
+            display: inline-block;
+            font-size: 14px;
+        }
+        .user {
+            background-color: #4caf50;
+            color: white;
+            align-self: flex-end;
+            text-align: right;
+            float: right;
+            clear: both;
+        }
+        .bot {
+            background-color: #f44336;
+            color: white;
+            align-self: flex-start;
+            text-align: left;
+            float: left;
+            clear: both;
+        }
+        #inputContainer {
+            margin-top: 20px;
+        }
+        #userInput {
+            width: 60%;
+            padding: 10px;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+            font-size: 16px;
+        }
+        button {
+            padding: 10px 15px;
+            border: none;
+            background-color: #007bff;
+            color: white;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            margin-left: 5px;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+    <h1>Hobby Recommendation Chatbot</h1>
+    <div id="chatbox"></div>
+    <div id="inputContainer">
+        <input type="text" id="userInput" placeholder="Tell me your interests...">
+        <button onclick="sendMessage()">Send</button>
+    </div>
+
+    <script>
+        const hobbies = {
+            "art": { "Painting": "Watercolor, Oil Painting, Acrylic", "Sketching": "Pencil, Charcoal, Digital", "Sculpting": "Clay, Wood, Stone" },
+            "music": { "Instruments": "Guitar, Piano, Violin", "Singing": "Classical, Pop, Jazz", "Production": "Mixing, DJing, Composing" },
+            "sports": { "Outdoor": "Football, Basketball, Cricket", "Indoor": "Chess, Table Tennis, Badminton" },
+            "tech": { "Coding": "Web Development, AI, Game Dev", "Robotics": "Arduino, Drone Building", "AI Research": "Machine Learning, Deep Learning" },
+            "nature": { "Exploration": "Hiking, Trekking, Birdwatching", "Gardening": "Organic Farming, Bonsai" },
+            "reading": { "Fiction": "Novels, Short Stories", "Non-Fiction": "Self-help, Biographies", "Writing": "Poetry, Blogging" },
+            "fitness": { "Gym": "Weightlifting, Cardio", "Yoga": "Meditation, Flexibility", "Outdoor": "Running, Cycling" }
+        };
+
+        function addBotMessage(message) {
+            let chatbox = document.getElementById("chatbox");
+            chatbox.innerHTML += `<div class='bot'>${message}</div>`;
+            chatbox.scrollTop = chatbox.scrollHeight;
+        }
+
+        function findBestMatch(input) {
+            for (let key in hobbies) {
+                if (input.includes(key)) return key;
+            }
+            return null;
+        }
+
+        function sendMessage() {
+            let input = document.getElementById("userInput").value.toLowerCase().trim();
+            let chatbox = document.getElementById("chatbox");
+            
+            if (input === "") return;
+            
+            chatbox.innerHTML += `<div class='user'>${input}</div>`;
+            
+            if (input.includes("help me")) {
+                response = "Sure! Here are some options you might like: Art, Music, Sports, Tech, Nature, Reading, Fitness. Type one to explore!";
+            } else {
+                let bestMatch = findBestMatch(input);
+                if (bestMatch) {
+                    let subcategories = Object.entries(hobbies[bestMatch]).map(([category, options]) => `${category}: ${options}`).join("<br>");
+                    response = `For ${bestMatch}, you might enjoy:<br>${subcategories}`;
+                } else {
+                    response = "I couldn't find a match, try different interests!";
+                }
+            }
+            
+            setTimeout(() => addBotMessage(response), 500);
+            document.getElementById("userInput").value = "";
+        }
+
+        // Initial Bot Greeting
+        window.onload = function() {
+            setTimeout(() => addBotMessage("Hi dude! How are you? Can you please tell me your hobby or let me help you choose one?"), 500);
+        }
+    </script>
+</body>
+</html>
